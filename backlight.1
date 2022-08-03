@@ -1,0 +1,54 @@
+.Dd August 3, 2022
+.Dt BACKLIGHT 1
+.Os
+.Sh NAME
+.Nm backlight
+.Nd set and get display backlight
+.Sh SYNOPSIS
+.Nm
+.Op get | set Ar number
+.Sh DESCRIPTION
+The
+.Nm
+script sets and gets display backlight values. You can set values by
+absolute percentages or by incrementing or decrementing the values.
+If you wish to set an absolute value, simply provide the number
+you wish to set it to as an argument to set. If you wish to
+increment or decrement the value, simply prefix the number 
+you provide to set with a + or - sign, respectively.
+
+The script will attempt to automatically detect a backlight device,
+however, if needed, this can be set via the
+.Ev BACKLIGHT
+environmental variable.
+
+This script requires the user to be a part of the
+.Em video
+group.
+
+.Sh EXAMPLES
+.Ss getting backlight value
+.D1 backlight get
+
+.Ss setting backlight value to 50%
+.D1 backlight set 50
+
+.Ss incrementing backlight value by 5%
+.D1 backlight set +5
+
+.Ss decrementing backlight value by 5%
+.D1 backlight set -5
+
+.Sh SEE ALSO
+.Xr light 1 ,
+.Xr backlightctl 1 ,
+.Xr xbacklight 1
+.Sh AUTHORS
+.Nm
+was written by
+.An Avalon Williams Aq Mt avalonwilliams@protonmail.com
+
+.Sh COPYRIGHT
+.Nm
+is available under the terms of the MIT license. See source code or
+LICENSE file for more details.
