@@ -31,7 +31,7 @@ usage() {
 
 [ $# -lt 1 ] && usage
 
-: ${BACKLIGHT:=$(find /sys/class/backlight/ -depth | head -n1)}
+: "${BACKLIGHT:=$(find /sys/class/backlight/ -depth | head -n1)}"
 
 err() {
 	echo "backlight: $1" 1>&2
@@ -39,7 +39,7 @@ err() {
 }
 
 percof() {
-	bc <<< "scale=2; ($1 / 100) * $2" | cut -d. -f1
+	echo "scale=2; ($1 / 100) * $2" | bc | cut -d. -f1
 }
 
 if [ "$BACKLIGHT" = "/sys/class/backlight/" ]; then
@@ -48,12 +48,12 @@ fi
 
 bf=${BACKLIGHT}/brightness
 
-b=$(cat $bf)
-mb=$(cat ${BACKLIGHT}/max_brightness)
+b=$(cat "$bf")
+mb=$(cat "${BACKLIGHT}/max_brightness")
 
 case "$1" in
 	get)
-		echo $(bc <<< "scale=2; ($b / $mb) * 100" | cut -d. -f1)
+		echo "scale=2; ($b / $mb) * 100" | bc | cut -d. -f1
 		;;
 	set)
 		[ -z "$2" ] && usage
@@ -63,22 +63,22 @@ case "$1" in
 
 		case "$n" in
 			+*)
-				n=$(percof ${n#+} $mb)
-				n=$(bc <<< "$b + $n")
+				n=$(percof "${n#+}" "$mb")
+				n=$(echo "$b + $n" | bc)
 
-				[ $n -gt $mb ] && exec echo $mb > $bf
-				exec echo $n > $bf
+				[ "$n" -gt "$mb" ] && exec echo "$mb" > "$bf"
+				exec echo "$n" > "$bf"
 				;;
 			-*)
-				n=$(percof ${n#-} $mb)
-				n=$(bc <<< "$b - $n")
+				n=$(percof "${n#-}" "$mb")
+				n=$(echo "$b - $n" | bc)
 
-				[ $n -lt 0 ] && exec echo 0 > $bf
-				exec echo $n > $bf
+				[ "$n" -lt 0 ] && exec echo 0 > "$bf"
+				exec echo "$n" > "$bf"
 				;;
 			*)
-				n=$(percof $n $mb)
-				exec echo $n > $bf
+				n=$(percof "$n" "$mb")
+				exec echo "$n" > "$bf"
 				;;
 		esac
 
